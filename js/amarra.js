@@ -23,12 +23,14 @@
      */
     var amarra = function (elementId) {
 
-        // get element
+        // Get DOM element
         var _el = document.getElementById(elementId);
         if (!_el) return null;
 
+        // Create scope
         var scope = {};
-        // attach _propsToElements to the scope object as non-enumerable
+
+        // Attach amarra object to the scope object as non-enumerable
         // this is used to find the element that is bound to each prop
         Object.defineProperty(scope, '__amarra__', {
             value: {
@@ -37,12 +39,12 @@
             enumerable: false
         });
 
-        // get all elements to be bound
+        // Get all elements to be bound
         var binds = _el.querySelectorAll("[" + DATATAG + "]");
 
 
 
-        // create a property with a custom setter in the scope for each element
+        // Create a property with a custom setter in the scope for each element
         binds.forEach(function (element) {
             var prop = element.getAttribute(DATATAG);
             scope.__amarra__.propsToElements[prop] = element;
@@ -62,17 +64,17 @@
 
         });
 
-        // add event listener to the parent element
+        // Add event listener to the parent element
         _el.addEventListener('change',
             (function () {
                 return amarraListener.bind(scope);
             })()
         );
 
-        // freeze properamarras that won't be modified anymore
+        // Freeze properties that won't be modified anymore
         Object.freeze(scope.__amarra__);
 
-        // all done! return the object with all the bound variables
+        // All done! return the object with all the bound variables
         console.log("amarra.js is set! " + binds.length.toString() + " bind(s) were created!");
         return scope;
 
