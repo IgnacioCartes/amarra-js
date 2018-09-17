@@ -1,0 +1,35 @@
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.33em;
+    font-weight: 400;
+    font-family: 'Nunito', sans-serif;
+    color: #0f380f;
+    padding: 0;
+    line-height: 1.5em;
+}
+
+input, select, option, textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #0f380f;
+    border-radius: 3px;
+}
+
+textarea {
+    resize: none;
+}
+
+pre {
+    word-break: break-all;
+    width: 100%;
+}
+
+.container {
+    width: 512px;
+    margin: 0 auto;
+}

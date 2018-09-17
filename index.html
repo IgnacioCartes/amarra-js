@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>amarra.js - simple dat binding for frontend javascript</title>
+    <meta name="description" content="Inventario Web">
+    <meta name="author" content="ignacio.cartes.w@gmail.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/amarra.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body>
+
+    <!-- to minify:
+    uglifyjs amarra.js -o amarra.min.js -c -m
+    -->
+
+    <div class="container" id="amarra-app">
+
+        <h2>amarra.js - Binding tests</h2>
+        <p>Compatible input types (at the moment): text, textarea, number, checkbox, select</p>
+        <p>To-do: radio groups</p>
+
+        <p>
+            <label>Name</label>
+            <input type="text" data-amarra="name" value="n.a." />
+        </p>
+
+        <p>
+            <label>Level</label>
+            <input type="number" data-amarra="level" value="60" />
+        </p>
+
+        <p>
+            <label>Main?</label>
+            <input type="checkbox" data-amarra="isMain" checked="checked" />
+        </p>
+
+        <p>
+            <label>Esper</label>
+            <select data-amarra="esper">
+            <option value="" selected>none</option>
+            <option value="Kirin">Kirin</option>
+            <option value="Palidor">Palidor</option>
+            <option value="ZoneSeek">ZoneSeek</option>
+            <option value="Crusader">Crusader</option>
+        </select>
+        </p>
+        
+        <p>
+            <label>E-Mail</label>
+            <input type="email" data-amarra="email" value="a@b.com" />
+        </p>
+
+        <p>
+            <label>Notes</label>
+            <textarea data-amarra="notes" rows="2">Hello World!</textarea>
+        </p>
+
+        <hr />
+        <button id="btn-reset"> Set default values </button>
+        <button id="btn-log"> Log all values </button>
+        <hr />
+
+        <pre id="pre-res"></pre>
+        <pre id="pre-json"></pre>
+
+    </div>
+
+</body>
+
+</html>
