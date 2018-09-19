@@ -1,2 +1,5 @@
 # JSHint
 .jshintrc
+
+# DSStore files
+.DS_Store
