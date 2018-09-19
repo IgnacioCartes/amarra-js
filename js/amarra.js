@@ -41,26 +41,63 @@
 
         // Get all elements to be bound
         var binds = _el.querySelectorAll("[" + DATATAG + "]");
+        var props = {};
 
-
-
-        // Create a property with a custom setter in the scope for each element
+        // Sort all props
         binds.forEach(function (element) {
             var prop = element.getAttribute(DATATAG);
-            scope.__amarra__.propsToElements[prop] = element;
-            //console.log(element.type);
+
+            if (element.type === "radio") {
+                // for radio buttons, an array is created in propsToElements
+                console.log(element, prop);
+                if (!props[prop])  {
+                    // if undefined, create a single element array
+                    props[prop] = [element];
+                } else {
+                    // else, push to the existing array
+                    props[prop].push(element);
+                }
+
+                // add name to radio element
+                element.setAttribute("name", prop);
+
+            } else {
+                // for other elements, no array is needed
+                props[prop] = element;
+            }
+        });
+
+        // pass props to scope
+        scope.__amarra__.propsToElements = props;
+
+        // Create a property with a custom setter in the scope for each prop
+        Object.keys(props).forEach(function (key) {
+
+            // get elements and scope prop
+            var element = props[key],
+                prop;
+
+            if (Array.isArray(element))
+                prop = element[0].getAttribute(DATATAG);
+            else
+                prop = element.getAttribute(DATATAG);
+
             var value = getElementValue(element);
-            Object.defineProperty(scope, prop, {
-                get: function () {
-                    return value;
-                },
-                set: function (newValue) {
-                    value = newValue;
-                    if (scope.__amarra__.propsToElements[prop])
-                        setElementValue(scope.__amarra__.propsToElements[prop], newValue);
-                },
-                enumerable: true
-            });
+            if (!scope[prop]) {
+                Object.defineProperty(scope, prop, {
+                    get: function () {
+                        return value;
+                    },
+                    set: function (newValue) {
+                        value = newValue;
+                        if (scope.__amarra__.propsToElements[prop])
+                            setElementValue(scope.__amarra__.propsToElements[prop], newValue);
+                    },
+                    enumerable: true
+                });
+            } else {
+                console.log(prop + " is already defined!", element);
+            }
 
         });
 
@@ -90,7 +127,7 @@
         var target = evt.target;
         var prop = evt.target.getAttribute("data-amarra");
 
-        if (prop) this[prop] = getElementValue(target);
+        if (prop) this[prop] = getElementValue(target, prop);
     }
 
 
@@ -99,13 +136,20 @@
      * Gets the value from an element depending on its type
      * @param {el} el Element to get a value from
      */
-    function getElementValue(el) {
+    function getElementValue(el, prop) {
 
         switch (el.type) {
             case "number":
                 return parseFloat(el.value);
             case "checkbox":
                 return el.checked;
+            case "radio":
+                var checked = document.querySelector('input[name = "' + prop + '"]:checked');
+                if (checked)
+                    return checked.value;
+                else
+                    return null;
+                break;
             default:
                 return el.value;
         }
@@ -116,17 +160,31 @@
 
     /**
      * Sets a value to an element depending on its type
-     * @param {object} el    Element to set a new value to
+     * @param {object} el    Element (or array of elements) to set a new value to
      * @param {object} value The value to set to
      */
     function setElementValue(el, value) {
 
-        switch (el.type) {
+        var eltype = el.type;
+        // detect radio
+        if (Array.isArray(el) && el[0].type === "radio")
+            eltype = "radio";
+
+        switch (eltype) {
             case "number":
                 el.value = parseFloat(value);
                 break;
             case "checkbox":
                 el.checked = value;
+                break;
+            case "radio":
+                el.forEach(function (radio) {
+                    if (radio.value === value)
+                        radio.checked = true;
+                    else
+                        radio.checked = false;
+                });
+
                 break;
             default:
                 el.value = value.toString();
