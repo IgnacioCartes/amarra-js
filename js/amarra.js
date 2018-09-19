@@ -49,7 +49,6 @@
 
             if (element.type === "radio") {
                 // for radio buttons, an array is created in propsToElements
-                console.log(element, prop);
                 if (!props[prop])  {
                     // if undefined, create a single element array
                     props[prop] = [element];
@@ -95,8 +94,6 @@
                     },
                     enumerable: true
                 });
-            } else {
-                console.log(prop + " is already defined!", element);
             }
 
         });
@@ -184,7 +181,6 @@
                     else
                         radio.checked = false;
                 });
-
                 break;
             default:
                 el.value = value.toString();
